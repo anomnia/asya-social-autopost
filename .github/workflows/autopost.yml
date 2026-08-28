@@ -1,0 +1,68 @@
+name: Autopost
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: autopost
+  cancel-in-progress: false
+
+jobs:
+  autopost:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt
+
+      - name: Задать базовый URL GitHub Pages
+        run: echo "PAGES_BASE_URL=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" >> "$GITHUB_ENV"
+
+      - name: Забрать новые посты из Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+        run: python scripts/fetch_telegram.py
+
+      - name: Закоммитить медиа, чтобы GitHub Pages начал их отдавать
+        run: |
+          git config user.name "autopost-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add docs/media state/telegram_offset.json state/pending.json
+          git diff --cached --quiet || git commit -m "chore: fetch telegram media"
+          git push
+
+      - name: Подождать, пока медиа станет доступно на GitHub Pages
+        run: python scripts/wait_for_pages.py
+
+      - name: Опубликовать в VK
+        env:
+          VK_ACCESS_TOKEN: ${{ secrets.VK_ACCESS_TOKEN }}
+          VK_GROUP_ID: ${{ secrets.VK_GROUP_ID }}
+        run: python scripts/post_vk.py
+
+      - name: Опубликовать в Threads
+        env:
+          THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          THREADS_USER_ID: ${{ secrets.THREADS_USER_ID }}
+        run: python scripts/post_threads.py
+
+      - name: Обновить RSS-фид для Дзена
+        run: python scripts/update_dzen_feed.py
+
+      - name: Закоммитить итоговое состояние
+        run: |
+          git add docs/dzen.xml docs/articles state/
+          git diff --cached --quiet || git commit -m "chore: autopost state update"
+          git pull --rebase
+          git push
