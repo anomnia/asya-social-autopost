@@ -1,1 +1,15 @@
-{}
+{
+  "340": {
+    "vk": {
+      "done": true,
+      "attempts": 0
+    },
+    "threads": {
+      "done": true,
+      "attempts": 0
+    },
+    "dzen": {
+      "done": true
+    }
+  }
+}
