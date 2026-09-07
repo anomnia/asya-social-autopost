@@ -26,13 +26,11 @@ FILE_API = f"https://api.telegram.org/file/bot{BOT_TOKEN}"
 OFFSET_FILE = state_path("telegram_offset.json")
 PENDING_FILE = state_path("pending.json")
 
-
 def chat_matches(chat: dict) -> bool:
     if CHANNEL_ID.lstrip("-").isdigit():
         return str(chat.get("id")) == CHANNEL_ID
     uname = CHANNEL_ID.lstrip("@").lower()
     return (chat.get("username") or "").lower() == uname
-
 
 def tg_get(method, **params):
     r = requests.get(f"{API}/{method}", params=params, timeout=30)
@@ -41,7 +39,6 @@ def tg_get(method, **params):
     if not data.get("ok"):
         raise RuntimeError(f"Telegram API error in {method}: {data.get('description')}")
     return data["result"]
-
 
 def download_file(file_id: str, dest_dir, filename: str) -> str:
     info = tg_get("getFile", file_id=file_id)
@@ -54,7 +51,6 @@ def download_file(file_id: str, dest_dir, filename: str) -> str:
     with open(full_path, "wb") as f:
         f.write(r.content)
     return str(full_path)
-
 
 def main():
     state = load_json(OFFSET_FILE, {"offset": 0})
@@ -100,7 +96,11 @@ def main():
             if "photo" in m:
                 largest = max(m["photo"], key=lambda p: p.get("file_size", 0))
                 fname = f"{m['message_id']}.jpg"
-                local_path = download_file(largest["file_id"], dest_dir, fname)
+                try:
+                    local_path = download_file(largest["file_id"], dest_dir, fname)
+                except Exception as e:
+                    log(f"Пропускаю фото {m['message_id']}: {e}")
+                    continue
                 media_items.append({
                     "type": "photo",
                     "local_path": local_path,
@@ -109,7 +109,11 @@ def main():
             elif "video" in m:
                 v = m["video"]
                 fname = f"{m['message_id']}.mp4"
-                local_path = download_file(v["file_id"], dest_dir, fname)
+                try:
+                    local_path = download_file(v["file_id"], dest_dir, fname)
+                except Exception as e:
+                    log(f"Пропускаю видео {m['message_id']}: {e}")
+                    continue
                 media_items.append({
                     "type": "video",
                     "local_path": local_path,
@@ -131,7 +135,6 @@ def main():
     save_json(PENDING_FILE, pending)
     save_json(OFFSET_FILE, {"offset": max_update_id + 1})
     log(f"Новых постов к публикации: {len(pending)}. Новый offset: {max_update_id + 1}")
-
 
 if __name__ == "__main__":
     try:
