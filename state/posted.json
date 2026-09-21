@@ -79,5 +79,24 @@
     "dzen": {
       "done": true
     }
+  },
+  "345": {
+    "vk": {
+      "done": false,
+      "attempts": 1
+    },
+    "threads": {
+      "done": true,
+      "attempts": 0,
+      "published_ids": [
+        "18022690121872443",
+        "18140968723719271",
+        "18352594888173835",
+        "17949001764052597"
+      ]
+    },
+    "dzen": {
+      "done": true
+    }
   }
 }
