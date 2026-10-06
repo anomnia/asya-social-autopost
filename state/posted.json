@@ -227,5 +227,40 @@
     "dzen": {
       "done": true
     }
+  },
+  "353": {
+    "vk": {
+      "done": true,
+      "attempts": 0
+    },
+    "threads": {
+      "done": true,
+      "attempts": 0,
+      "published_ids": [
+        "18345481528268779",
+        "18121164187731112"
+      ]
+    },
+    "dzen": {
+      "done": true
+    }
+  },
+  "354": {
+    "vk": {
+      "done": true,
+      "attempts": 0
+    },
+    "threads": {
+      "done": true,
+      "attempts": 0,
+      "published_ids": [
+        "18097508792434980",
+        "18111121265128325",
+        "18354817624175134"
+      ]
+    },
+    "dzen": {
+      "done": true
+    }
   }
 }
