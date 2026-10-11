@@ -281,5 +281,42 @@
     "dzen": {
       "done": true
     }
+  },
+  "360": {
+    "vk": {
+      "done": true,
+      "attempts": 0
+    },
+    "threads": {
+      "done": true,
+      "attempts": 0,
+      "published_ids": [
+        "17910060783474546",
+        "18119139983104097",
+        "17974770786153307",
+        "18223773361341909"
+      ]
+    },
+    "dzen": {
+      "done": true
+    }
+  },
+  "361": {
+    "vk": {
+      "done": false,
+      "attempts": 1
+    },
+    "threads": {
+      "done": true,
+      "attempts": 0,
+      "published_ids": [
+        "18430094710199704",
+        "18011141447976763",
+        "18168898420480376"
+      ]
+    },
+    "dzen": {
+      "done": true
+    }
   }
 }
