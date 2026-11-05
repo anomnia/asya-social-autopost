@@ -451,5 +451,19 @@
     "dzen": {
       "done": true
     }
+  },
+  "372": {
+    "vk": {
+      "done": true,
+      "attempts": 0
+    },
+    "threads": {
+      "done": false,
+      "attempts": 1,
+      "published_ids": []
+    },
+    "dzen": {
+      "done": true
+    }
   }
 }
