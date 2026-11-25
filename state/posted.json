@@ -521,5 +521,19 @@
     "dzen": {
       "done": true
     }
+  },
+  "378": {
+    "vk": {
+      "done": false,
+      "attempts": 1
+    },
+    "threads": {
+      "done": false,
+      "attempts": 1,
+      "published_ids": []
+    },
+    "dzen": {
+      "done": true
+    }
   }
 }
